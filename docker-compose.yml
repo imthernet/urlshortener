@@ -1,0 +1,36 @@
+version: '3.8'  # Always good to specify the version
+
+services:
+  write-service:
+    build: encoder
+    ports:
+      - "8081:8080"
+    depends_on:
+      cassandra-db:
+        condition: service_healthy
+
+  cassandra-db:
+    image: cassandra:latest
+    container_name: cassandra-db
+    hostname: cassandra-db
+    ports:
+      - "9042:9042"
+    environment:
+      CASSANDRA_SEEDS: "cassandra-db"
+      CASSANDRA_CLUSTER_NAME: SolarSystem
+      CASSANDRA_DC: Mars
+      CASSANDRA_RACK: West
+      CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+      CASSANDRA_NUM_TOKENS: 128
+    volumes:
+      - cassandra-data:/var/lib/cassandra               # Using a named volume
+    healthcheck:
+      test: [ "CMD", "cqlsh", "-e", "describe keyspaces" ]
+      interval: 5s
+      timeout: 5s
+      retries: 60
+
+volumes:  # This should be at the same level as 'services'
+  cassandra-data:
+    driver: local  # Optional: specifying the driver, default is 'local'
+
