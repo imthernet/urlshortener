@@ -33,6 +33,7 @@ services:
       CASSANDRA_NUM_TOKENS: 128
     volumes:
       - cassandra-data:/var/lib/cassandra               # Using a named volume
+      - ./cassandra.yaml:/etc/cassandra/cassandra.yaml
     healthcheck:
       test: [ "CMD", "cqlsh", "-e", "describe keyspaces" ]
       interval: 5s
