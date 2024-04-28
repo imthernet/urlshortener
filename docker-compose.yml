@@ -17,6 +17,11 @@ services:
       cassandra-db:
         condition: service_healthy
 
+  remover-service:
+    build: remover
+    depends_on:
+      cassandra-db:
+        condition: service_healthy
 
   cassandra-db:
     image: cassandra:latest
