@@ -8,6 +8,15 @@ services:
     depends_on:
       cassandra-db:
         condition: service_healthy
+    
+  read-service:
+    build: decoder
+    ports:
+      - "8082:8080"
+    depends_on:
+      cassandra-db:
+        condition: service_healthy
+
 
   cassandra-db:
     image: cassandra:latest

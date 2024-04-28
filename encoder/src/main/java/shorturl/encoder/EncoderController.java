@@ -2,6 +2,7 @@ package shorturl.encoder;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.apache.commons.text.RandomStringGenerator;
@@ -26,7 +27,7 @@ public class EncoderController {
 
 
     @PostMapping
-    private ResponseEntity<Void> EncodeUrl(String newUrl, UriComponentsBuilder ucb) {
+    private ResponseEntity<Void> encodeUrl(@RequestBody String newUrl, UriComponentsBuilder ucb) {
         String shortId = generator.generate(8);
         while (urlRepository.existsById(shortId)) {
             shortId = generator.generate(8);
