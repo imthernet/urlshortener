@@ -14,6 +14,7 @@ import java.util.Random;
 @RestController
 public class EncoderController {
     private final UrlRepository urlRepository;
+    private final UrlCensorer urlCensorer;
     private final Random random = new Random();
     private final RandomStringGenerator generator = new RandomStringGenerator.Builder()
             .withinRange('0', 'z')
@@ -21,8 +22,9 @@ public class EncoderController {
             .get();
 
 
-    public EncoderController(UrlRepository urlRepository) {
+    public EncoderController(UrlRepository urlRepository, UrlCensorer urlCensorer) {
         this.urlRepository = urlRepository;
+        this.urlCensorer = urlCensorer;
     }
 
 
@@ -34,6 +36,7 @@ public class EncoderController {
         }
         Url url = new Url(shortId,newUrl,LocalDateTime.now());
         urlRepository.save(url);
+        urlCensorer.analyzeUrl(url);
         URI locationOfNewUrl = ucb
                 .port(8082)
                 .path("/{shortId}")
